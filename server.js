@@ -23,9 +23,28 @@ const router = express.Router()
 
 
 app.use('/api', router)
-
-//リクエストがgetの時
 router.route('/')
+    .get(function(req, res) {
+        res.json({
+            message: 'apiサーバーが起動しました'
+        })
+    })
+
+
+// ログイン機能の実装の断片
+// router.route('/users')
+//     .get(function(req, res) {
+//         if (err) {
+//             res.send(err)
+//         }
+//         res.json({
+//             message: "ログインか新規登録してください"
+//         })
+//     })
+
+
+router.route('/todos')
+    //リクエストがgetの時
     .get(function(req, res) {
         Todos.find(function (err, todos) {
             if (err) {
@@ -49,6 +68,39 @@ router.route('/')
             })
         })
     })
+
+router.route('/todos/:todos_id')
+    .get(function(req, res) {
+        Todos.findById(req.params.todos_id, function(err, todos) {
+            if (err) {
+                res.send(err)
+            }
+            res.json(todos)
+        })
+    })
+    .put(function(req, res) {
+        Todos.findById(req.params.todos_id, function(err, todos) {
+            if (err) {
+                res.send(err)
+            }
+            res.json({
+                message: "更新しました。"
+            })
+        })
+    })
+    .delete(function(req, res) {
+        Todos.remove({
+            _id: req.params.todos_id
+        }, function(err, todos) {
+            if (err) {
+                res.send(err)
+            }
+            res.json({
+                message: "削除削除削除削除"
+            })
+        })
+    })
+
 
 app.listen(port, ()=>{
     console.log('listening')
